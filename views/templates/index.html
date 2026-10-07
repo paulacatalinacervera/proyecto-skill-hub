@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import icono %}
+{% block contenido %}
+<section class="hero text-center">
+  <h1>Lo que necesitas, alguien cerca<br>lo hace por ti.</h1>
+
+  <form id="form-busqueda" class="buscador" role="search" action="{{ url_for('main.index') }}" method="get">
+    <input id="q" name="q" type="search" class="form-control" autocomplete="off"
+           aria-label="Buscar servicios" value="{{ request.args.get('q', '') }}">
+    <button type="submit" aria-label="Buscar"><i class="bi bi-search"></i></button>
+    <input type="hidden" id="categoria" name="categoria" value="{{ request.args.get('categoria', '') }}">
+  </form>
+
+  <div class="chips" id="chips">
+    {% for clave, nombre in categorias.items() %}
+      <button type="button" class="chip {{ 'activo' if request.args.get('categoria') == clave }}" data-categoria="{{ clave }}">
+        <span class="chip-icono">{{ icono(clave) }}</span>{{ nombre }}
+      </button>
+    {% endfor %}
+  </div>
+
+  <div class="filtros-extra">
+    <select id="orden" class="form-select form-select-sm" aria-label="Ordenar resultados">
+      <option value="recomendados">Recomendados</option>
+      <option value="calificacion">Mejor calificados</option>
+      <option value="cercania">Más cercanos</option>
+      <option value="precio">Menor precio</option>
+      <option value="experiencia">Más experiencia</option>
+    </select>
+    <select id="min_estrellas" class="form-select form-select-sm" aria-label="Calificación mínima">
+      <option value="0">Cualquier calificación</option>
+      <option value="4">4★ o más</option>
+      <option value="4.5">4.5★ o más</option>
+    </select>
+  </div>
+</section>
+
+<section id="resultados" class="row g-4 resultados" aria-live="polite">
+  {% include '_tarjetas.html' %}
+</section>
+
+<section id="como-funciona" class="como-funciona text-center">
+  <h2>¿Cómo funciona?</h2>
+  <div class="row g-4 mt-1">
+    <div class="col-md-4"><div class="paso"><i class="bi bi-search"></i><h4>1. Busca</h4>
+      <p>Encuentra personas cercanas con la habilidad que necesitas.</p></div></div>
+    <div class="col-md-4"><div class="paso"><i class="bi bi-chat-dots"></i><h4>2. Conversa</h4>
+      <p>Acuerda precio, fecha y detalles directamente por el chat.</p></div></div>
+    <div class="col-md-4"><div class="paso"><i class="bi bi-star"></i><h4>3. Califica</h4>
+      <p>Deja tu reseña y ayuda a que el buen talento local crezca.</p></div></div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/main.js') }}"></script>{% endblock %}

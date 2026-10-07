@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import foto %}
+{% block titulo %}Chat con {{ o['nombre'] }} · SkillHub{% endblock %}
+{% block contenido %}
+<a href="{{ url_for('main.perfil', oferente_id=o['id']) }}" class="volver"><i class="bi bi-arrow-left"></i> Volver al perfil</a>
+<section class="chat-caja" id="chat" data-oferente="{{ o['id'] }}">
+  <header class="chat-cab">
+    {{ foto(o, 'avatar avatar-chico') }}
+    <div><strong>{{ o['nombre'] }}</strong><br><small>${{ o['tarifa'] }}/h</small></div>
+  </header>
+  <div class="chat-msgs" id="msgs" aria-live="polite"></div>
+  <form class="chat-form" id="chat-form" autocomplete="off">
+    <input id="texto" class="form-control" maxlength="500" placeholder="Escribe un mensaje…" aria-label="Mensaje" required>
+    <button class="btn btn-sh" aria-label="Enviar"><i class="bi bi-send-fill"></i></button>
+  </form>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/chat.js') }}"></script>{% endblock %}

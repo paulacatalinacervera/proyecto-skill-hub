@@ -1,0 +1,27 @@
+{% from '_macros.html' import estrellas, foto %}
+{% for o in oferentes %}
+  <div class="col-12 col-md-6 col-lg-4">
+    <article class="tarjeta-oferente">
+      <div class="tarjeta-cuerpo">
+        <div class="tarjeta-izq">
+          {{ foto(o) }}
+          <div class="tarifa">${{ o['tarifa'] }}/h</div>
+          <div class="distancia">{{ ('%g' % o['distancia_km']) }}km</div>
+          {{ estrellas(o['calificacion']) }}
+        </div>
+        <div class="tarjeta-der">
+          <h3>{{ o['nombre'] }}
+            {% if o['verificado'] %}<i class="bi bi-patch-check-fill verificado" title="Estudios verificados"></i>{% endif %}
+          </h3>
+          <p>{{ o['descripcion'] }}</p>
+        </div>
+      </div>
+      <a class="btn btn-sh" href="{{ url_for('main.perfil', oferente_id=o['id']) }}">Ver perfil</a>
+    </article>
+  </div>
+{% else %}
+  <div class="col-12 text-center text-muted py-5">
+    <i class="bi bi-search fs-1 d-block mb-2"></i>
+    No encontramos perfiles con esos criterios. Prueba con otra búsqueda.
+  </div>
+{% endfor %}

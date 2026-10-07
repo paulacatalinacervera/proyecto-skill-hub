@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import estrellas, foto, icono %}
+{% block titulo %}{{ o['nombre'] }} · SkillHub{% endblock %}
+{% block contenido %}
+<a href="{{ url_for('main.index') }}" class="volver"><i class="bi bi-arrow-left"></i> Volver</a>
+<section class="perfil-card">
+  <div class="perfil-cabecera">
+    {{ foto(o, 'avatar avatar-grande') }}
+    <div>
+      <h1>{{ o['nombre'] }}
+        {% if o['verificado'] %}<i class="bi bi-patch-check-fill verificado" title="Estudios verificados"></i>{% endif %}
+      </h1>
+      <span class="badge-cat">{{ icono(o['categoria']) }} {{ categorias[o['categoria']] }}</span>
+      <div class="mt-2">{{ estrellas(o['calificacion']) }} <small class="text-muted">{{ o['calificacion'] }}</small></div>
+    </div>
+  </div>
+
+  <p class="mt-4">{{ o['descripcion'] }}</p>
+
+  <div class="row g-3 datos">
+    <div class="col-6 col-md-3"><div class="dato"><strong>${{ o['tarifa'] }}/h</strong><span>Tarifa</span></div></div>
+    <div class="col-6 col-md-3"><div class="dato"><strong>{{ '%g' % o['distancia_km'] }} km</strong><span>Distancia</span></div></div>
+    <div class="col-6 col-md-3"><div class="dato"><strong>{{ o['anios_experiencia'] }} años</strong><span>Experiencia</span></div></div>
+    <div class="col-6 col-md-3"><div class="dato"><strong>{{ o['servicios_completados'] }}</strong><span>Servicios</span></div></div>
+  </div>
+
+  <h5 class="mt-4">Logros</h5>
+  <div class="d-flex flex-wrap gap-2">
+    {% for m in medallas %}
+      <span class="medalla medalla-{{ m['nivel']|lower }}"><i class="bi bi-award-fill"></i> {{ m['nivel'] }} · {{ m['detalle'] }}</span>
+    {% else %}<span class="text-muted small">Aún sin medallas.</span>{% endfor %}
+    {% if o['verificado'] %}<span class="medalla medalla-ver"><i class="bi bi-patch-check-fill"></i> Estudios verificados</span>{% endif %}
+  </div>
+
+  <a class="btn btn-sh mt-4 px-5" href="{{ url_for('chat.sala', oferente_id=o['id']) }}">
+    <i class="bi bi-chat-dots"></i> Contactar por chat
+  </a>
+</section>
+
+<section class="perfil-card mt-4">
+  <h4>Reseñas ({{ resenas|length }})</h4>
+  {% for r in resenas %}
+    <div class="resena">
+      <div><strong>{{ r['autor'] }}</strong> {{ estrellas(r['estrellas']) }}</div>
+      <p class="mb-0">{{ r['comentario'] }}</p>
+    </div>
+  {% else %}<p class="text-muted">Todavía no hay reseñas.</p>{% endfor %}
+
+  {% if puede_resenar %}
+    <form method="post" action="{{ url_for('main.resenar', oferente_id=o['id']) }}" class="mt-4">
+      <h6>Deja tu reseña</h6>
+      <select name="estrellas" class="form-select mb-2" required>
+        <option value="">Calificación…</option>
+        {% for i in range(5, 0, -1) %}<option value="{{ i }}">{{ i }} estrella{{ 's' if i > 1 }}</option>{% endfor %}
+      </select>
+      <textarea name="comentario" class="form-control mb-2" rows="3" maxlength="400" placeholder="Cuéntanos cómo fue el servicio" required></textarea>
+      <button class="btn btn-sh px-4">Publicar</button>
+    </form>
+  {% else %}
+    <p class="small text-muted mt-3 mb-0"><i class="bi bi-info-circle"></i> Podrás reseñar a este perfil después de conversar con él por el chat.</p>
+  {% endif %}
+</section>
+{% endblock %}

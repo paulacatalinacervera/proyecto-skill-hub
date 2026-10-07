@@ -1,0 +1,30 @@
+{% macro estrellas(valor) %}
+  <span class="estrellas" aria-label="{{ valor }} de 5 estrellas">
+    {% for i in range(1, 6) %}
+      <i class="bi {{ 'bi-star-fill' if valor >= i - 0.25 else ('bi-star-half' if valor >= i - 0.75 else 'bi-star') }}"></i>
+    {% endfor %}
+  </span>
+{% endmacro %}
+
+{% macro icono(cat) %}
+  {% if cat == 'ninos' %}<i class="bi bi-person-hearts"></i>
+  {% elif cat == 'mascotas' %}
+    <svg class="icono-svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <ellipse cx="6" cy="10" rx="2.2" ry="3"/><ellipse cx="10.5" cy="5.5" rx="2.2" ry="3"/>
+      <ellipse cx="16.5" cy="5.5" rx="2.2" ry="3"/><ellipse cx="21" cy="10" rx="2.2" ry="3" transform="rotate(10 21 10)"/>
+      <path d="M12 11c3.5 0 6.5 3.8 6.5 6.4 0 2-1.8 2.6-3.3 2.2-1.2-.3-2-.6-3.2-.6s-2 .3-3.2.6c-1.5.4-3.3-.2-3.3-2.2C5.5 14.800 8.500 11 12 11z"/>
+    </svg>
+  {% elif cat == 'limpieza' %}<i class="bi bi-stars"></i>
+  {% elif cat == 'comida' %}<i class="bi bi-egg-fried"></i>
+  {% elif cat == 'tecnologia' %}<i class="bi bi-laptop"></i>
+  {% elif cat == 'clases' %}<i class="bi bi-mortarboard"></i>
+  {% else %}<i class="bi bi-tag"></i>{% endif %}
+{% endmacro %}
+
+{% macro foto(o, clase='avatar') %}
+  {% if o['foto'] %}
+    <img class="{{ clase }}" src="{{ url_for('static', filename='img/' + o['foto']) }}" alt="Foto de {{ o['nombre'] }}">
+  {% else %}
+    <span class="{{ clase }} avatar-inicial" aria-hidden="true">{{ o['nombre'][0] }}</span>
+  {% endif %}
+{% endmacro %}
